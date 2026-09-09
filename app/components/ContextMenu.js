@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { IconRefresh, IconTerminal2, IconPalette, IconInfoCircle } from '@tabler/icons-react';
 
 const ACCENTS = ['#5dcaa5', '#a78bfa', '#fbbf24']; // Teal, Violet, Amber
+const ACCENT_NAMES = ['teal', 'violet', 'amber'];
 
-export default function ContextMenu({ isOpen, x, y, onClose, onOpenApp }) {
+export default function ContextMenu({ isOpen, x, y, onClose, onOpenApp, addToast }) {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [[renderX, renderY], setRenderPos] = useState([x, y]);
   const menuRef = useRef(null);
@@ -89,6 +90,9 @@ export default function ContextMenu({ isOpen, x, y, onClose, onOpenApp }) {
     }
     
     root.style.setProperty('--accent', ACCENTS[nextIndex]);
+    if (addToast) {
+      addToast(`theme: ${ACCENT_NAMES[nextIndex]}`, IconPalette);
+    }
   };
 
   if (!isOpen) return null;

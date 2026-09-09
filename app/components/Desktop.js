@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import MatrixRain from './MatrixRain';
 import Taskbar from './Taskbar';
 import Window from './Window';
@@ -134,6 +134,7 @@ function TopBar({ onSimpleView }) {
 export default function Desktop({ onSimpleView }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState({ isOpen: false, x: 0, y: 0 });
+  const [toasts, setToasts] = useState([]);
   const {
     windows,
     openApp,
@@ -143,10 +144,25 @@ export default function Desktop({ onSimpleView }) {
     moveWindow,
   } = useWindowManager();
 
+  const addToast = useCallback((msg, icon) => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, msg, icon }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 4000);
+  }, []);
+
+  const handleOpenApp = useCallback((appId) => {
+    openApp(appId);
+    if (appId === 'chess') addToast('launching chess.exe...', IconCrown);
+    else if (appId === 'terminal') addToast('shell session started', IconTerminal2);
+    else if (appId === 'trash') addToast('empty. no bugs in here (that we know of).', IconTrash);
+  }, [openApp, addToast]);
+
   /* Auto-open welcome window on mount */
   useEffect(() => {
-    openApp('welcome');
-  }, [openApp]);
+    handleOpenApp('welcome');
+  }, [handleOpenApp]);
 
   /* Highest-z non-minimized window is the "active" one */
   const activeWindowId =
@@ -157,7 +173,7 @@ export default function Desktop({ onSimpleView }) {
   /* Taskbar entry click: restore minimized windows, refocus open ones */
   const handleTaskbarClick = (win) => {
     if (win.minimized) {
-      openApp(win.appId); // openApp un-minimizes + focuses existing window
+      handleOpenApp(win.appId); // handleOpenApp un-minimizes + focuses existing window
     } else {
       focusWindow(win.id);
     }
@@ -200,7 +216,7 @@ export default function Desktop({ onSimpleView }) {
             key={appId}
             Icon={Icon}
             label={label}
-            onOpen={() => openApp(appId)}
+            onOpen={() => handleOpenApp(appId)}
           />
         ))}
       </div>
@@ -213,7 +229,7 @@ export default function Desktop({ onSimpleView }) {
         <DesktopIcon
           Icon={IconTrash}
           label="trash"
-          onOpen={() => openApp('trash')}
+          onOpen={() => handleOpenApp('trash')}
         />
       </div>
 
@@ -227,7 +243,7 @@ export default function Desktop({ onSimpleView }) {
           onFocus={() => focusWindow(win.id)}
           onMove={(x, y) => moveWindow(win.id, x, y)}
         >
-          {getAppContent(win.appId, openApp)}
+          {getAppContent(win.appId, handleOpenApp)}
         </Window>
       ))}
 
@@ -245,7 +261,7 @@ export default function Desktop({ onSimpleView }) {
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         onOpenApp={(appId) => {
-          openApp(appId);
+          handleOpenApp(appId);
         }}
         onSimpleView={onSimpleView}
       />
@@ -256,8 +272,33 @@ export default function Desktop({ onSimpleView }) {
         x={contextMenu.x}
         y={contextMenu.y}
         onClose={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
-        onOpenApp={(appId) => openApp(appId)}
+        onOpenApp={(appId) => handleOpenApp(appId)}
+        addToast={addToast}
       />
+
+      {/* ── Layer 6: Toasts ─────────────────────────────────────────────── */}
+      <div 
+        className="fixed top-12 right-4 z-[5000] flex flex-col gap-2 pointer-events-none"
+        aria-live="polite"
+      >
+        {toasts.map(t => {
+          const IconComponent = t.icon;
+          return (
+            <div 
+              key={t.id} 
+              className="bg-panel border border-line rounded px-3 py-2 flex items-center gap-2 shadow-lg transition-all duration-300 animate-[toast-slide-in_0.3s_ease-out]"
+            >
+              {IconComponent && <IconComponent size={16} className="text-accent shrink-0" stroke={1.5} />}
+              <span 
+                className="text-[11px] text-ink-dim tracking-wide" 
+                style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
+              >
+                {t.msg}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

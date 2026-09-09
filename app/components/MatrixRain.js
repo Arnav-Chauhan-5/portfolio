@@ -17,8 +17,13 @@ const TRAIL_COLOR = '#1d9e75';   // saturated green for trailing characters
 const FADE_ALPHA  = 0.12;        // opacity of the per-frame void overlay
 
 /* ── Component ───────────────────────────────────────────────────────────── */
-export default function MatrixRain() {
+export default function MatrixRain({ isIdle = false }) {
   const canvasRef = useRef(null);
+  const isIdleRef = useRef(isIdle);
+
+  useEffect(() => {
+    isIdleRef.current = isIdle;
+  }, [isIdle]);
 
   useEffect(() => {
     // Honour reduced motion — skip entirely
@@ -44,11 +49,16 @@ export default function MatrixRain() {
     };
 
     const draw = () => {
+      const idle = isIdleRef.current;
+      const fadeAlpha = idle ? 0.05 : FADE_ALPHA;
+
       // Semi-transparent void overlay → creates the fade trail
-      ctx.fillStyle = `rgba(8,9,11,${FADE_ALPHA})`;
+      ctx.fillStyle = `rgba(8,9,11,${fadeAlpha})`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.font = `${FONT_SIZE}px "JetBrains Mono", monospace`;
+
+      const resetChance = idle ? 0.3 : RESET_CHANCE;
 
       for (let i = 0; i < drops.length; i++) {
         const y = drops[i];
@@ -63,8 +73,8 @@ export default function MatrixRain() {
         ctx.fillText(char, px, py);
 
         // Reset column randomly after it exits the bottom
-        if (py > canvas.height && Math.random() > RESET_CHANCE) {
-          drops[i] = Math.floor(Math.random() * -30);
+        if (py > canvas.height && Math.random() > resetChance) {
+          drops[i] = idle ? Math.floor(Math.random() * -5) : Math.floor(Math.random() * -30);
         } else {
           drops[i]++;
         }
@@ -73,7 +83,8 @@ export default function MatrixRain() {
 
     const animate = () => {
       tick++;
-      if (tick % FRAME_SKIP === 0) draw();
+      const skip = isIdleRef.current ? 1 : FRAME_SKIP;
+      if (tick % skip === 0) draw();
       rafId = requestAnimationFrame(animate);
     };
 
@@ -92,8 +103,9 @@ export default function MatrixRain() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.4 }}
+      className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity ${
+        isIdle ? 'opacity-100 duration-1000' : 'opacity-40 duration-0'
+      }`}
       aria-hidden="true"
     />
   );

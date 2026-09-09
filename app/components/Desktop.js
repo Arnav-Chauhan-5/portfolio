@@ -110,17 +110,25 @@ function TopBar({ onSimpleView }) {
       >
         arnav.dev
       </span>
-      <button
-        onClick={onSimpleView}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-line
-                   text-[10px] font-bold text-accent tracking-wide uppercase
-                   hover:bg-white/5 hover:border-ink-dim hover:text-ink transition-colors"
-        style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
-        title="Switch to simple view"
-      >
-        <IconLayoutList size={14} />
-        switch to simple view
-      </button>
+      <div className="flex items-center gap-4">
+        <span 
+          className="text-[10px] text-ink-faint hidden sm:inline-block opacity-60"
+          style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
+        >
+          # stay idle for a while
+        </span>
+        <button
+          onClick={onSimpleView}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-line
+                     text-[10px] font-bold text-accent tracking-wide uppercase
+                     hover:bg-white/5 hover:border-ink-dim hover:text-ink transition-colors"
+          style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
+          title="Switch to simple view"
+        >
+          <IconLayoutList size={14} />
+          switch to simple view
+        </button>
+      </div>
     </div>
   );
 }
@@ -143,6 +151,48 @@ export default function Desktop({ onSimpleView }) {
     focusWindow,
     moveWindow,
   } = useWindowManager();
+
+  const [isIdle, setIsIdle] = useState(false);
+  const [showIdleMessage, setShowIdleMessage] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let idleTimeout;
+    let messageTimeout;
+
+    const resetIdle = () => {
+      setIsIdle(false);
+      setShowIdleMessage(false);
+      clearTimeout(idleTimeout);
+      clearTimeout(messageTimeout);
+      if (!isMenuOpen && !contextMenu.isOpen) {
+        idleTimeout = setTimeout(() => {
+          setIsIdle(true);
+          setShowIdleMessage(true);
+          messageTimeout = setTimeout(() => {
+            setShowIdleMessage(false);
+          }, 5000);
+        }, 15000);
+      }
+    };
+
+    window.addEventListener('mousemove', resetIdle);
+    window.addEventListener('mousedown', resetIdle);
+    window.addEventListener('keydown', resetIdle);
+    window.addEventListener('touchstart', resetIdle);
+
+    resetIdle();
+
+    return () => {
+      clearTimeout(idleTimeout);
+      clearTimeout(messageTimeout);
+      window.removeEventListener('mousemove', resetIdle);
+      window.removeEventListener('mousedown', resetIdle);
+      window.removeEventListener('keydown', resetIdle);
+      window.removeEventListener('touchstart', resetIdle);
+    };
+  }, [isMenuOpen, contextMenu.isOpen]);
 
   const addToast = useCallback((msg, icon) => {
     const id = Date.now() + Math.random();
@@ -189,8 +239,6 @@ export default function Desktop({ onSimpleView }) {
         }
       }}
     >
-      <TopBar onSimpleView={onSimpleView} />
-
       {/* ── Layer -1: Dot Grid Texture ──────────────────────────────────── */}
       <div
         className="absolute inset-0 pointer-events-none opacity-20"
@@ -201,60 +249,89 @@ export default function Desktop({ onSimpleView }) {
       />
 
       {/* ── Layer 0: Matrix rain (canvas, absolute, pointer-events-none) ── */}
-      <MatrixRain />
+      <MatrixRain isIdle={isIdle} />
 
-      {/* ── Layer 0.5: Decorative Widgets ───────────────────────────────── */}
-      <NeofetchWidget />
-
-      {/* ── Layer 1: Desktop icons — top-left column ────────────────────── */}
-      <div
-        className="absolute top-14 left-4 flex flex-col gap-1"
-        style={{ zIndex: 10 }}
+      {/* ── Layer 0.1: Idle Message ─────────────────────────────────────── */}
+      <div 
+        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity ${
+          showIdleMessage ? 'opacity-100 duration-500' : isIdle ? 'opacity-0 duration-1000' : 'opacity-0 duration-0'
+        }`}
+        style={{ zIndex: 5 }}
       >
-        {ICONS.map(({ appId, Icon, label }) => (
-          <DesktopIcon
-            key={appId}
-            Icon={Icon}
-            label={label}
-            onOpen={() => handleOpenApp(appId)}
+        <div 
+          className="text-accent text-lg sm:text-xl"
+          style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
+        >
+          still here?
+          <span
+            className="inline-block bg-accent align-text-bottom ml-1.5"
+            style={{
+              width: '0.55em',
+              height: '1.1em',
+              animation: 'caret-blink 1s step-start infinite',
+            }}
+            aria-hidden="true"
           />
-        ))}
+        </div>
       </div>
 
-      {/* ── Layer 1.5: Desktop icons — isolated trash ─────────────────────── */}
-      <div
-        className="absolute bottom-16 left-4"
-        style={{ zIndex: 10 }}
-      >
-        <DesktopIcon
-          Icon={IconTrash}
-          label="trash"
-          onOpen={() => handleOpenApp('trash')}
+      {/* ── Dimming Wrapper for Idle Screensaver ────────────────────────── */}
+      <div className={`absolute inset-0 transition-opacity ${isIdle ? 'opacity-10 pointer-events-none duration-1000' : 'opacity-100 duration-0'}`}>
+        <TopBar onSimpleView={onSimpleView} />
+
+        {/* ── Layer 0.5: Decorative Widgets ───────────────────────────────── */}
+        <NeofetchWidget />
+
+        {/* ── Layer 1: Desktop icons — top-left column ────────────────────── */}
+        <div
+          className="absolute top-14 left-4 flex flex-col gap-1"
+          style={{ zIndex: 10 }}
+        >
+          {ICONS.map(({ appId, Icon, label }) => (
+            <DesktopIcon
+              key={appId}
+              Icon={Icon}
+              label={label}
+              onOpen={() => handleOpenApp(appId)}
+            />
+          ))}
+        </div>
+
+        {/* ── Layer 1.5: Desktop icons — isolated trash ─────────────────────── */}
+        <div
+          className="absolute bottom-16 left-4"
+          style={{ zIndex: 10 }}
+        >
+          <DesktopIcon
+            Icon={IconTrash}
+            label="trash"
+            onOpen={() => handleOpenApp('trash')}
+          />
+        </div>
+
+        {/* ── Layer 2: Windows (each manages its own z-index) ─────────────── */}
+        {windows.map((win) => (
+          <Window
+            key={win.id}
+            win={win}
+            onClose={() => closeWindow(win.id)}
+            onMinimize={() => minimizeWindow(win.id)}
+            onFocus={() => focusWindow(win.id)}
+            onMove={(x, y) => moveWindow(win.id, x, y)}
+          >
+            {getAppContent(win.appId, handleOpenApp)}
+          </Window>
+        ))}
+
+        {/* ── Layer 3: Taskbar (fixed bottom, z-9999) ──────────────────────── */}
+        <Taskbar
+          windows={windows}
+          activeWindowId={activeWindowId}
+          onWindowClick={handleTaskbarClick}
+          onMenuClick={() => setIsMenuOpen((prev) => !prev)}
+          onSimpleView={onSimpleView}
         />
       </div>
-
-      {/* ── Layer 2: Windows (each manages its own z-index) ─────────────── */}
-      {windows.map((win) => (
-        <Window
-          key={win.id}
-          win={win}
-          onClose={() => closeWindow(win.id)}
-          onMinimize={() => minimizeWindow(win.id)}
-          onFocus={() => focusWindow(win.id)}
-          onMove={(x, y) => moveWindow(win.id, x, y)}
-        >
-          {getAppContent(win.appId, handleOpenApp)}
-        </Window>
-      ))}
-
-      {/* ── Layer 3: Taskbar (fixed bottom, z-9999) ──────────────────────── */}
-      <Taskbar
-        windows={windows}
-        activeWindowId={activeWindowId}
-        onWindowClick={handleTaskbarClick}
-        onMenuClick={() => setIsMenuOpen((prev) => !prev)}
-        onSimpleView={onSimpleView}
-      />
 
       {/* ── Layer 4: Start Menu ───────────────────────────────────────────── */}
       <StartMenu

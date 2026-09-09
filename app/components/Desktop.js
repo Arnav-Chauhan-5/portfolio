@@ -8,15 +8,15 @@ import StartMenu from './StartMenu';
 import ContextMenu from './ContextMenu';
 import { useWindowManager } from '../hooks/useWindowManager';
 import ProjectsApp from './apps/ProjectsApp';
-import AboutApp    from './apps/AboutApp';
-import SkillsApp   from './apps/SkillsApp';
-import ContactApp  from './apps/ContactApp';
-import WelcomeApp  from './apps/WelcomeApp';
+import AboutApp from './apps/AboutApp';
+import SkillsApp from './apps/SkillsApp';
+import ContactApp from './apps/ContactApp';
+import WelcomeApp from './apps/WelcomeApp';
 import TerminalApp from './apps/TerminalApp';
-import ResumeApp   from './apps/ResumeApp';
-import TrashApp    from './apps/TrashApp';
+import ResumeApp from './apps/ResumeApp';
+import TrashApp from './apps/TrashApp';
 import AboutBuildApp from './apps/AboutBuildApp';
-import ChessApp    from './apps/ChessApp';
+import ChessApp from './apps/ChessApp';
 import NeofetchWidget from './NeofetchWidget';
 
 import { IconFolder, IconUser, IconCode, IconMail, IconTool, IconLayoutList, IconTerminal2, IconFileText, IconTrash, IconCrown } from '@tabler/icons-react';
@@ -24,12 +24,12 @@ import { IconFolder, IconUser, IconCode, IconMail, IconTool, IconLayoutList, Ico
 /* ── Icon definitions ────────────────────────────────────────────────────── */
 const ICONS = [
   { appId: 'projects', Icon: IconFolder, label: 'projects' },
-  { appId: 'about',    Icon: IconUser,   label: 'about'    },
-  { appId: 'skills',   Icon: IconCode,   label: 'skills'   },
-  { appId: 'contact',  Icon: IconMail,   label: 'contact'  },
-  { appId: 'terminal', Icon: IconTerminal2,label: 'terminal' },
-  { appId: 'resume',   Icon: IconFileText, label: 'resume.pdf' },
-  { appId: 'chess',    Icon: IconCrown,    label: 'chess'    },
+  { appId: 'about', Icon: IconUser, label: 'about' },
+  { appId: 'skills', Icon: IconCode, label: 'skills' },
+  { appId: 'contact', Icon: IconMail, label: 'contact' },
+  { appId: 'terminal', Icon: IconTerminal2, label: 'terminal' },
+  { appId: 'resume', Icon: IconFileText, label: 'resume.pdf' },
+  { appId: 'chess', Icon: IconCrown, label: 'chess' },
 ];
 
 /* ── Desktop icon ────────────────────────────────────────────────────────── */
@@ -72,16 +72,16 @@ function DesktopIcon({ Icon, label, onOpen }) {
 /* ── App content router ─────────────────────────────────────────────────── */
 function getAppContent(appId, openApp) {
   switch (appId) {
-    case 'welcome':  return <WelcomeApp />;
+    case 'welcome': return <WelcomeApp />;
     case 'projects': return <ProjectsApp />;
-    case 'about':    return <AboutApp />;
-    case 'skills':   return <SkillsApp />;
-    case 'contact':  return <ContactApp />;
+    case 'about': return <AboutApp />;
+    case 'skills': return <SkillsApp />;
+    case 'contact': return <ContactApp />;
     case 'terminal': return <TerminalApp openApp={openApp} />;
-    case 'resume':   return <ResumeApp />;
-    case 'trash':    return <TrashApp />;
+    case 'resume': return <ResumeApp />;
+    case 'trash': return <TrashApp />;
     case 'about-build': return <AboutBuildApp />;
-    case 'chess':    return <ChessApp />;
+    case 'chess': return <ChessApp />;
     default:
       return (
         <div className="h-full flex flex-col items-center justify-center gap-2">
@@ -164,7 +164,7 @@ export default function Desktop({ onSimpleView }) {
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-void overflow-hidden"
       onContextMenu={(e) => {
         if (e.target === e.currentTarget) {
@@ -176,7 +176,7 @@ export default function Desktop({ onSimpleView }) {
       <TopBar onSimpleView={onSimpleView} />
 
       {/* ── Layer -1: Dot Grid Texture ──────────────────────────────────── */}
-      <div 
+      <div
         className="absolute inset-0 pointer-events-none opacity-20"
         style={{
           backgroundImage: 'radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)',
@@ -222,10 +222,10 @@ export default function Desktop({ onSimpleView }) {
         <Window
           key={win.id}
           win={win}
-          onClose={()        => closeWindow(win.id)}
-          onMinimize={()     => minimizeWindow(win.id)}
-          onFocus={()        => focusWindow(win.id)}
-          onMove={(x, y)     => moveWindow(win.id, x, y)}
+          onClose={() => closeWindow(win.id)}
+          onMinimize={() => minimizeWindow(win.id)}
+          onFocus={() => focusWindow(win.id)}
+          onMove={(x, y) => moveWindow(win.id, x, y)}
         >
           {getAppContent(win.appId, openApp)}
         </Window>

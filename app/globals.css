@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* ─── Design-system tokens ─────────────────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --void:         #08090b;
+  --panel:        #111318;
+  --panel-raised: #16181d;
+
+  /* Borders */
+  --line:         #22252b;
+  --line-strong:  #2c2f36;
+
+  /* Typography */
+  --ink:          #eef0f2;
+  --ink-dim:      #9a9da3;
+  --ink-faint:    #808388;  /* lifted from #6f7278 → contrast ~5.1:1 on void, ~4.8:1 on panel (WCAG AA) */
+
+  /* Accent */
+  --accent:       #5dcaa5;
+  --accent-dim:   #1a2e28;
+
+  /* Glitch palette (reserved — used only in glitch-text effect) */
+  --glitch-a:     #ff4d6d;
+  --glitch-b:     #3ad6ff;
+}
+
+/* ─── Tailwind v4 theme mapping ────────────────────────────────────────────── */
+@theme inline {
+  /* Color utilities: bg-void, text-ink, border-line, etc. */
+  --color-void:         var(--void);
+  --color-panel:        var(--panel);
+  --color-panel-raised: var(--panel-raised);
+  --color-line:         var(--line);
+  --color-line-strong:  var(--line-strong);
+  --color-ink:          var(--ink);
+  --color-ink-dim:      var(--ink-dim);
+  --color-ink-faint:    var(--ink-faint);
+  --color-accent:       var(--accent);
+  --color-accent-dim:   var(--accent-dim);
+  --color-glitch-a:     var(--glitch-a);
+  --color-glitch-b:     var(--glitch-b);
+
+  /* Font utilities */
+  --font-mono: var(--font-jetbrains);
+  --font-body: var(--font-inter);
+}
+
+/* ─── Base styles ──────────────────────────────────────────────────────────── */
+/* ─── Keyboard focus ring — explicit ring for dark backgrounds ───────────────── */
+/* Overrides the browser default (blue, hard to see on #08090b) with a        */
+/* 2 px teal (--accent) ring offset 3 px from the element edge.               */
+/* Elements that need a different ring (e.g. circular traffic lights) apply    */
+/* focus-visible:outline-none + focus-visible:ring-* Tailwind classes to       */
+/* override this rule via higher specificity.                                  */
+:focus-visible {
+  outline:        2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius:  2px;
+}
+
+
+html,
+body {
+  background-color: var(--void);
+  color: var(--ink);
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  -webkit-font-smoothing: antialiased;
+  height: 100%;
+}
+
+/* ─── Keyframes ────────────────────────────────────────────────────────────── */
+
+/* Blinking terminal cursor */
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* RGB-split glitch — channel A (red)
+   Near-adjacent stops (4.9%/5%, 9.9%/10%) make CSS linear interpolation
+   imperceptible (<8 ms at 8 s), so channels snap on/off digitally. */
+@keyframes glitch-a {
+  0%,  4.9% { opacity: 0; clip-path: inset(0 0 100% 0);  transform: translate(0,     0);   }
+  5%,  9.9% { opacity: 1; clip-path: inset(20% 0 60% 0); transform: translate(-3px,  1px); }
+  10%, 14.9%{ opacity: 1; clip-path: inset(55% 0 10% 0); transform: translate( 2px, -1px); }
+  15%, 100% { opacity: 0; clip-path: inset(0 0 100% 0);  transform: translate(0,     0);   }
+}
+
+/* RGB-split glitch — channel B (cyan) */
+@keyframes glitch-b {
+  0%,  4.9% { opacity: 0; clip-path: inset(0 0 100% 0);  transform: translate(0,    0);    }
+  5%,  9.9% { opacity: 1; clip-path: inset(60% 0 20% 0); transform: translate( 3px, -1px); }
+  10%, 14.9%{ opacity: 1; clip-path: inset(10% 0 55% 0); transform: translate(-2px,  1px); }
+  15%, 100% { opacity: 0; clip-path: inset(0 0 100% 0);  transform: translate(0,    0);    }
+}
+
+/* ─── Respect reduced-motion preference ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes caret-blink {
+    0%, 100% { opacity: 1; }
+  }
+
+  @keyframes glitch-a {
+    0%, 100% { opacity: 0; }
+  }
+
+  @keyframes glitch-b {
+    0%, 100% { opacity: 0; }
+  }
+}

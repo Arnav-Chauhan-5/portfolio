@@ -21,12 +21,47 @@ const APP_DEFAULTS = {
   placeholder_blue:  { title: 'Blue Window',  w: 420, h: 300 },
 };
 
-const BASE_X       = 140; // first window's left offset (px)
-const BASE_Y       = 90;  // first window's top offset  (px)
-const CASCADE_STEP = 36;  // each subsequent window is offset by this much
-const CASCADE_WRAP = 8;   // reset after this many cascaded windows
-
 const INITIAL_Z    = 10;
+
+/* ── Spawn Logic ─────────────────────────────────────────────────────────── */
+function getSpawnPosition(cascadeIndex, winWidth, winHeight) {
+  if (typeof window === 'undefined') return { x: 140, y: 90 };
+
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // 5 distinct regions to prevent visual overlap stacking
+  const REGIONS = [
+    { x: vw * 0.35, y: 80 },  // top-center
+    { x: vw * 0.60, y: 140 }, // right-of-center
+    { x: vw * 0.45, y: 220 }, // lower-center-right
+    { x: vw * 0.70, y: 90 },  // far-right
+    { x: vw * 0.25, y: 180 }, // secondary-cascade
+  ];
+
+  const regionIndex = cascadeIndex % REGIONS.length;
+  // Advance internal cascade only when returning to the same region
+  const internalIndex = Math.floor(cascadeIndex / REGIONS.length) % 6; 
+  const CASCADE_STEP = 34;
+
+  let x = REGIONS[regionIndex].x + (internalIndex * CASCADE_STEP);
+  let y = REGIONS[regionIndex].y + (internalIndex * CASCADE_STEP);
+
+  // Safe boundaries (excluding icon column, top bar, and taskbar)
+  const TOP_BAR_H = 32;
+  const TASKBAR_H = 48;
+  const ICON_COL_W = 100;
+
+  // Clamp right/bottom first
+  if (x + winWidth > vw) x = vw - winWidth - 10;
+  if (y + winHeight > vh - TASKBAR_H) y = vh - TASKBAR_H - winHeight - 10;
+  
+  // Clamp left/top as absolute priority if window is huge
+  if (x < ICON_COL_W) x = ICON_COL_W + 10;
+  if (y < TOP_BAR_H) y = TOP_BAR_H + 10;
+
+  return { x: Math.floor(x), y: Math.floor(y) };
+}
 
 /* ── Reducer ─────────────────────────────────────────────────────────────── */
 function reducer(state, action) {
@@ -50,14 +85,14 @@ function reducer(state, action) {
         };
       }
 
-      const slot  = state.cascade % CASCADE_WRAP;
+      const { x, y } = getSpawnPosition(state.cascade, defaults.w, defaults.h);
       const topZ  = state.topZ + 1;
       const newWin = {
         id:        `${appId}-${Date.now()}`,
         appId,
         title:     defaults.title,
-        x:         BASE_X + slot * CASCADE_STEP,
-        y:         BASE_Y + slot * CASCADE_STEP,
+        x,
+        y,
         w:         defaults.w,
         h:         defaults.h,
         z:         topZ,

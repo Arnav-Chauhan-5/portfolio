@@ -19,6 +19,53 @@ function Tag({ label }) {
   );
 }
 
+/* ── Fake Terminal Frame ─────────────────────────────────────────────────── */
+function FakeTerminalFrame() {
+  const [error, setError] = useState(false);
+
+  return (
+    <div className="flex flex-col border border-line rounded-lg overflow-hidden bg-void my-4 w-full shrink-0 shadow-md">
+      {/* Title bar */}
+      <div
+        className="flex items-center gap-2 px-3 shrink-0 border-b border-line bg-panel-raised select-none"
+        style={{ height: '32px' }}
+      >
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#ff5f57' }} aria-hidden="true" />
+          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#febc2e' }} aria-hidden="true" />
+          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28c840' }} aria-hidden="true" />
+        </div>
+        <span
+          className="flex-1 text-center text-[10px] text-ink-dim tracking-wide truncate pr-8"
+          style={MONO}
+        >
+          shell — recorded session
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="w-full aspect-video bg-void relative flex items-center justify-center">
+        {!error ? (
+          // TODO: Supply the actual recording file at public/media/shell-demo.mp4.
+          <video
+            src="/media/shell-demo.mp4"
+            muted
+            loop
+            autoPlay
+            playsInline
+            className="w-full h-full object-cover"
+            onError={() => setError(true)}
+          />
+        ) : (
+          <span className="text-[10px] text-ink-faint tracking-widest uppercase" style={MONO}>
+            recording coming soon
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── Link row ────────────────────────────────────────────────────────────── */
 function LinkRow({ href, icon, label, disabled, disabledLabel }) {
   if (disabled || !href) {
@@ -68,6 +115,9 @@ function Detail({ project }) {
         {project.description}
       </p>
 
+      {/* Native App Player */}
+      {project.type === 'native' && <FakeTerminalFrame />}
+
       {/* Tech tags */}
       <div>
         <div
@@ -84,11 +134,7 @@ function Detail({ project }) {
       {/* Links */}
       <div className="border-t border-line pt-3 flex items-center gap-5 flex-wrap">
         {/* Demo */}
-        {project.type === 'native' ? (
-          <span className="text-[11px] text-ink-faint italic" style={BODY}>
-            native app — no browser demo
-          </span>
-        ) : (
+        {project.type !== 'native' && (
           <LinkRow
             href={project.links.demo}
             icon="ti-external-link"

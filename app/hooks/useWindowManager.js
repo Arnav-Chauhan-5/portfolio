@@ -10,7 +10,7 @@ import { useCallback, useReducer } from 'react';
 const APP_DEFAULTS = {
   // ── Real portfolio apps ─────────────────────────────────────────────────
   welcome:  { title: 'readme.txt', w: 460, h: 320 },
-  projects: { title: 'Projects', w: 560, h: 440 },
+  projects: { title: 'projects/', w: 560, h: 440 },
   about:    { title: 'About Me', w: 460, h: 380 },
   skills:   { title: 'Skills',   w: 480, h: 400 },
   contact:  { title: 'Contact',  w: 420, h: 340 },
@@ -137,6 +137,14 @@ function reducer(state, action) {
         ),
       };
 
+    case 'UPDATE_BOUNDS':
+      return {
+        ...state,
+        windows: state.windows.map(w =>
+          w.id === action.id ? { ...w, ...action.bounds } : w,
+        ),
+      };
+
     default:
       return state;
   }
@@ -154,10 +162,11 @@ export function useWindowManager() {
     dispatch({ type: 'OPEN', appId, defaults });
   }, []);
 
-  const closeWindow    = useCallback((id)       => dispatch({ type: 'CLOSE',    id }),    []);
-  const minimizeWindow = useCallback((id)       => dispatch({ type: 'MINIMIZE', id }),    []);
-  const focusWindow    = useCallback((id)       => dispatch({ type: 'FOCUS',    id }),    []);
-  const moveWindow     = useCallback((id, x, y) => dispatch({ type: 'MOVE', id, x, y }), []);
+  const closeWindow        = useCallback((id)       => dispatch({ type: 'CLOSE',    id }),    []);
+  const minimizeWindow     = useCallback((id)       => dispatch({ type: 'MINIMIZE', id }),    []);
+  const focusWindow        = useCallback((id)       => dispatch({ type: 'FOCUS',    id }),    []);
+  const moveWindow         = useCallback((id, x, y) => dispatch({ type: 'MOVE', id, x, y }), []);
+  const updateWindowBounds = useCallback((id, bounds) => dispatch({ type: 'UPDATE_BOUNDS', id, bounds }), []);
 
   return {
     windows: state.windows,
@@ -166,5 +175,6 @@ export function useWindowManager() {
     minimizeWindow,
     focusWindow,
     moveWindow,
+    updateWindowBounds,
   };
 }

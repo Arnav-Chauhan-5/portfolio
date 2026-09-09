@@ -5,7 +5,7 @@ const BODY = { fontFamily: 'var(--font-inter), system-ui, sans-serif' };
 
 export default function WelcomeApp() {
   return (
-    <div className="h-full overflow-y-auto p-6 flex flex-col items-center justify-center text-center">
+    <div className="h-full overflow-hidden p-6 flex flex-col items-center justify-center text-center">
       <pre
         className="text-accent text-[8px] sm:text-[10px] leading-none mb-6 select-none font-bold"
         style={MONO}
@@ -29,6 +29,10 @@ export default function WelcomeApp() {
       
       <p className="text-[12px] text-ink-dim leading-relaxed max-w-xs mt-3" style={BODY}>
         <strong className="text-ink">Double-click an icon</strong> on the left to explore projects, skills, and background.
+      </p>
+
+      <p className="text-[12px] text-ink-dim leading-relaxed max-w-xs mt-3" style={BODY}>
+        Tip: drag a window to the screen edge to snap it.
       </p>
     </div>
   );

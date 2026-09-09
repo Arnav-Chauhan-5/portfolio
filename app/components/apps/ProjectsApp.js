@@ -157,11 +157,74 @@ function Detail({ project }) {
   );
 }
 
+import { IconCrown, IconTerminal2 } from '@tabler/icons-react';
+
+/* ── Directory Listing ───────────────────────────────────────────────────── */
+function DirectoryListing({ onSelectProject }) {
+  return (
+    <div className="flex-1 overflow-auto bg-void p-5">
+      <div className="text-ink-faint text-[11px] mb-4 leading-relaxed" style={MONO}>
+        total 16<br/>
+        drwxr-xr-x  4 arnav  staff    128 Sep 10 03:00 .<br/>
+        drwxr-xr-x  6 arnav  staff    192 Sep 10 02:50 ..
+      </div>
+      <div className="flex flex-col gap-0.5">
+        {PROJECTS.map((p) => {
+          let filename = p.id;
+          let icon = null;
+          let size = '4096';
+          let perms = '-rw-r--r--';
+          let date = 'Sep 10 03:00';
+          
+          if (p.id === 'chess') {
+            filename = 'chess.bin';
+            icon = <IconCrown size={14} className="text-accent" />;
+            perms = '-rwxr-xr-x';
+            size = '842M';
+            date = 'Sep 08 14:23';
+          } else if (p.id === 'cpp-shell') {
+            filename = 'shell.cpp';
+            icon = <IconTerminal2 size={14} className="text-accent" />;
+            perms = '-rw-r--r--';
+            size = '14K';
+            date = 'Sep 09 11:05';
+          }
+
+          return (
+            <button
+              key={p.id}
+              onClick={() => onSelectProject(p.id)}
+              onDoubleClick={() => onSelectProject(p.id)}
+              className="flex items-center w-full text-left hover:bg-white/5 px-2 py-1 -ml-2 rounded transition-colors group"
+              style={MONO}
+            >
+              <span className="text-ink-dim text-[11px] whitespace-pre hidden sm:inline">
+                {perms}  1 arnav  staff  {size.padStart(5, ' ')} {date}   
+              </span>
+              <span className="flex items-center gap-2 text-ink group-hover:text-accent transition-colors text-[11px]">
+                {icon}
+                {filename}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ── ProjectsApp ─────────────────────────────────────────────────────────── */
 export default function ProjectsApp() {
-  const [selectedId, setSelectedId] = useState(
-    PROJECTS.find((p) => p.featured)?.id ?? PROJECTS[0].id,
-  );
+  const [view, setView] = useState('list'); // 'list' | 'detail'
+  const [selectedId, setSelectedId] = useState(null);
+
+  if (view === 'list') {
+    return <DirectoryListing onSelectProject={(id) => {
+      setSelectedId(id);
+      setView('detail');
+    }} />;
+  }
+
   const project = PROJECTS.find((p) => p.id === selectedId) ?? PROJECTS[0];
 
   return (
@@ -171,14 +234,15 @@ export default function ProjectsApp() {
         className="w-44 shrink-0 border-r border-line flex flex-col h-full overflow-y-auto"
         aria-label="Project list"
       >
-        {/* Section label */}
-        <div
-          className="px-3 py-2 text-[9px] text-ink-faint tracking-widest uppercase
-                     border-b border-line"
+        {/* Back button */}
+        <button
+          onClick={() => setView('list')}
+          className="px-3 py-2 text-[10px] text-ink-dim hover:text-accent tracking-widest uppercase
+                     border-b border-line text-left flex items-center gap-1.5 transition-colors bg-panel-raised hover:bg-white/5 shrink-0"
           style={MONO}
         >
-          projects/
-        </div>
+          <span aria-hidden="true" className="text-lg leading-none -translate-y-[1px]">←</span> projects/
+        </button>
 
         {PROJECTS.map((p) => {
           const active = p.id === selectedId;

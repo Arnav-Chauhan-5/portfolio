@@ -111,7 +111,7 @@ function TopBar({ onSimpleView }) {
         arnav.dev
       </span>
       <div className="flex items-center gap-4">
-        <span 
+        <span
           className="text-[10px] text-ink-faint hidden sm:inline-block opacity-60"
           style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
         >
@@ -150,6 +150,7 @@ export default function Desktop({ onSimpleView }) {
     minimizeWindow,
     focusWindow,
     moveWindow,
+    updateWindowBounds,
   } = useWindowManager();
 
   const [isIdle, setIsIdle] = useState(false);
@@ -252,13 +253,12 @@ export default function Desktop({ onSimpleView }) {
       <MatrixRain isIdle={isIdle} />
 
       {/* ── Layer 0.1: Idle Message ─────────────────────────────────────── */}
-      <div 
-        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity ${
-          showIdleMessage ? 'opacity-100 duration-500' : isIdle ? 'opacity-0 duration-1000' : 'opacity-0 duration-0'
-        }`}
+      <div
+        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity ${showIdleMessage ? 'opacity-100 duration-500' : isIdle ? 'opacity-0 duration-1000' : 'opacity-0 duration-0'
+          }`}
         style={{ zIndex: 5 }}
       >
-        <div 
+        <div
           className="text-accent text-lg sm:text-xl"
           style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
         >
@@ -318,6 +318,7 @@ export default function Desktop({ onSimpleView }) {
             onMinimize={() => minimizeWindow(win.id)}
             onFocus={() => focusWindow(win.id)}
             onMove={(x, y) => moveWindow(win.id, x, y)}
+            onUpdateBounds={(bounds) => updateWindowBounds(win.id, bounds)}
           >
             {getAppContent(win.appId, handleOpenApp)}
           </Window>
@@ -354,20 +355,20 @@ export default function Desktop({ onSimpleView }) {
       />
 
       {/* ── Layer 6: Toasts ─────────────────────────────────────────────── */}
-      <div 
+      <div
         className="fixed top-12 right-4 z-[5000] flex flex-col gap-2 pointer-events-none"
         aria-live="polite"
       >
         {toasts.map(t => {
           const IconComponent = t.icon;
           return (
-            <div 
-              key={t.id} 
+            <div
+              key={t.id}
               className="bg-panel border border-line rounded px-3 py-2 flex items-center gap-2 shadow-lg transition-all duration-300 animate-[toast-slide-in_0.3s_ease-out]"
             >
               {IconComponent && <IconComponent size={16} className="text-accent shrink-0" stroke={1.5} />}
-              <span 
-                className="text-[11px] text-ink-dim tracking-wide" 
+              <span
+                className="text-[11px] text-ink-dim tracking-wide"
                 style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
               >
                 {t.msg}

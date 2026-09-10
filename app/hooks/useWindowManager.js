@@ -14,6 +14,7 @@ const APP_DEFAULTS = {
   about:    { title: 'About Me', w: 460, h: 380 },
   skills:   { title: 'Skills',   w: 480, h: 400 },
   contact:  { title: 'Contact',  w: 420, h: 340 },
+  dsa:      { title: 'dsa_stats', w: 480, h: 360 },
 
   // ── Dev placeholders (remove when real content ships) ───────────────────
   placeholder_red:   { title: 'Red Window',   w: 420, h: 300 },

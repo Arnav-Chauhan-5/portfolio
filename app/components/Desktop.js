@@ -17,9 +17,10 @@ import ResumeApp from './apps/ResumeApp';
 import TrashApp from './apps/TrashApp';
 import AboutBuildApp from './apps/AboutBuildApp';
 import ChessApp from './apps/ChessApp';
+import DsaApp from './apps/DsaApp';
 import NeofetchWidget from './NeofetchWidget';
 
-import { IconFolder, IconUser, IconCode, IconMail, IconTool, IconLayoutList, IconTerminal2, IconFileText, IconTrash, IconCrown } from '@tabler/icons-react';
+import { IconFolder, IconUser, IconCode, IconMail, IconTool, IconLayoutList, IconTerminal2, IconFileText, IconTrash, IconCrown, IconBinaryTree } from '@tabler/icons-react';
 
 /* ── Icon definitions ────────────────────────────────────────────────────── */
 const ICONS = [
@@ -30,6 +31,7 @@ const ICONS = [
   { appId: 'terminal', Icon: IconTerminal2, label: 'terminal' },
   { appId: 'resume', Icon: IconFileText, label: 'resume.pdf' },
   { appId: 'chess', Icon: IconCrown, label: 'chess' },
+  { appId: 'dsa', Icon: IconBinaryTree, label: 'dsa' },
 ];
 
 /* ── Desktop icon ────────────────────────────────────────────────────────── */
@@ -82,6 +84,7 @@ function getAppContent(appId, openApp) {
     case 'trash': return <TrashApp />;
     case 'about-build': return <AboutBuildApp />;
     case 'chess': return <ChessApp />;
+    case 'dsa': return <DsaApp />;
     default:
       return (
         <div className="h-full flex flex-col items-center justify-center gap-2">
@@ -304,18 +307,15 @@ export default function Desktop({ onSimpleView }) {
               onOpen={() => handleOpenApp(appId)}
             />
           ))}
-        </div>
 
-        {/* ── Layer 1.5: Desktop icons — isolated trash ─────────────────────── */}
-        <div
-          className="absolute bottom-16 left-4"
-          style={{ zIndex: 10 }}
-        >
-          <DesktopIcon
-            Icon={IconTrash}
-            label="trash"
-            onOpen={() => handleOpenApp('trash')}
-          />
+          {/* ── Desktop icons — isolated trash ─────────────────────── */}
+          <div className="mt-6">
+            <DesktopIcon
+              Icon={IconTrash}
+              label="trash"
+              onOpen={() => handleOpenApp('trash')}
+            />
+          </div>
         </div>
 
         {/* ── Layer 2: Windows (each manages its own z-index) ─────────────── */}

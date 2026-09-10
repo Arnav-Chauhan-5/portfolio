@@ -12,6 +12,7 @@ import {
   IconRefresh,
   IconLayoutList,
   IconCrown,
+  IconBinaryTree,
 } from '@tabler/icons-react';
 
 const APP_ITEMS = [
@@ -23,6 +24,7 @@ const APP_ITEMS = [
   { id: 'resume',   label: 'Resume',   Icon: IconFileText },
   { id: 'trash',    label: 'Trash',    Icon: IconTrash },
   { id: 'chess',    label: 'Chess',    Icon: IconCrown },
+  { id: 'dsa',      label: 'DSA',      Icon: IconBinaryTree },
 ];
 
 export default function StartMenu({ isOpen, onClose, onOpenApp, onSimpleView }) {

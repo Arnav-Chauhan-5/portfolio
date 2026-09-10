@@ -153,6 +153,66 @@ function Detail({ project }) {
           disabledLabel="repo — TODO"
         />
       </div>
+
+      {/* Problem */}
+      {project.problem && (
+        <div className="pt-2">
+          <div className="mb-3">
+            <span
+              className="text-[9px] text-accent tracking-[0.2em] uppercase border border-accent px-2 py-0.5 rounded-sm"
+              style={MONO}
+            >
+              problem
+            </span>
+          </div>
+          <p className="text-[12px] text-ink-dim leading-relaxed" style={BODY}>
+            {project.problem}
+          </p>
+        </div>
+      )}
+
+      {/* Role */}
+      {project.role && (
+        <div className="pt-2">
+          <div className="mb-3">
+            <span
+              className="text-[9px] text-accent tracking-[0.2em] uppercase border border-accent px-2 py-0.5 rounded-sm"
+              style={MONO}
+            >
+              role
+            </span>
+          </div>
+          <p className="text-[12px] text-ink-dim leading-relaxed" style={BODY}>
+            {project.role}
+          </p>
+        </div>
+      )}
+
+      {/* Technical Decisions */}
+      {project.decisions && project.decisions.length > 0 && (
+        <div className="pt-2">
+          <div className="mb-4">
+            <span
+              className="text-[9px] text-accent tracking-[0.2em] uppercase border border-accent px-2 py-0.5 rounded-sm"
+              style={MONO}
+            >
+              technical decisions
+            </span>
+          </div>
+          <div className="flex flex-col gap-4">
+            {project.decisions.map((decision, i) => (
+              <div key={i}>
+                <h4 className="text-[12px] font-bold text-ink mb-1" style={BODY}>
+                  {decision.title}
+                </h4>
+                <p className="text-[12px] text-ink-dim leading-relaxed" style={BODY}>
+                  {decision.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

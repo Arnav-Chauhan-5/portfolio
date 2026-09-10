@@ -101,33 +101,42 @@ function getAppContent(appId, openApp) {
 function TopBar({ onSimpleView }) {
   return (
     <div
-      className="fixed top-0 inset-x-0 h-10 bg-panel border-b border-line flex items-center justify-between px-4 select-none shadow-md"
+      className="fixed top-0 inset-x-0 h-10 bg-panel border-b border-line flex items-center px-4 select-none shadow-md"
       style={{ zIndex: 9999 }}
     >
-      <span
-        className="text-[10px] text-ink-faint tracking-widest uppercase opacity-60"
-        style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
-      >
-        arnav.dev
-      </span>
-      <div className="flex items-center gap-4">
+      {/* Left column */}
+      <div className="flex-1 flex justify-start">
         <span
-          className="text-[10px] text-ink-faint hidden sm:inline-block opacity-60"
+          className="text-[10px] text-ink-faint tracking-widest uppercase opacity-60"
           style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
         >
-          # stay idle for a while
+          arnav.dev
         </span>
+      </div>
+
+      {/* Center column */}
+      <div className="flex-1 flex justify-center">
         <button
           onClick={onSimpleView}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-line
                      text-[10px] font-bold text-accent tracking-wide uppercase
                      hover:bg-white/5 hover:border-ink-dim hover:text-ink transition-colors"
           style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
-          title="Switch to simple view"
+          title="Switch to quick view"
         >
           <IconLayoutList size={14} />
-          switch to simple view
+          switch to quick view
         </button>
+      </div>
+
+      {/* Right column */}
+      <div className="flex-1 flex justify-end">
+        <span
+          className="text-[10px] text-ink-faint hidden sm:inline-block opacity-60"
+          style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
+        >
+          # stay idle for a while
+        </span>
       </div>
     </div>
   );

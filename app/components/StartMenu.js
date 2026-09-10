@@ -136,7 +136,7 @@ export default function StartMenu({ isOpen, onClose, onOpenApp, onSimpleView }) 
           }`}
         >
           <IconLayoutList size={18} stroke={1.5} />
-          <span>Switch to Simple View</span>
+          <span>Switch to Quick View</span>
         </button>
       </div>
     </>

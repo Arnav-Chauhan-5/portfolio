@@ -95,6 +95,11 @@ function reducer(state, action) {
         y,
         w:         defaults.w,
         h:         defaults.h,
+        homeX:     x,
+        homeY:     y,
+        homeW:     defaults.w,
+        homeH:     defaults.h,
+        preEnlarge: null,
         z:         topZ,
         minimized: false,
       };

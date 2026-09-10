@@ -166,6 +166,7 @@ export default function Window({ win, onClose, onMinimize, onFocus, onMove, onUp
         style={{ height: '36px' }}
         onMouseDown={handleTitleDown}
         onTouchStart={handleTitleDown}
+        onDoubleClick={(e) => { e.stopPropagation(); onMinimize(); }}
       >
         {/* Traffic lights */}
         <button
@@ -183,14 +184,45 @@ export default function Window({ win, onClose, onMinimize, onFocus, onMove, onUp
                      focus-visible:ring-white/60 focus-visible:ring-offset-1
                      focus-visible:ring-offset-panel-raised"
           style={{ background: DOT_MINIMIZE }}
-          onClick={(e) => { e.stopPropagation(); onMinimize(); }}
-          aria-label={`Minimize ${win.title}`}
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            onUpdateBounds({ x: win.homeX, y: win.homeY, w: win.homeW, h: win.homeH, preEnlarge: null }); 
+          }}
+          aria-label={`Reset ${win.title}`}
         />
-        {/* Decorative dot — no action */}
-        <span
-          className="w-3 h-3 rounded-full shrink-0"
+        <button
+          className="w-3 h-3 rounded-full shrink-0 transition-opacity hover:opacity-80
+                     focus-visible:outline-none focus-visible:ring-2
+                     focus-visible:ring-white/60 focus-visible:ring-offset-1
+                     focus-visible:ring-offset-panel-raised"
           style={{ background: DOT_DECO }}
-          aria-hidden="true"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (win.preEnlarge) {
+              onUpdateBounds({
+                x: win.preEnlarge.x,
+                y: win.preEnlarge.y,
+                w: win.preEnlarge.w,
+                h: win.preEnlarge.h,
+                preEnlarge: null
+              });
+            } else {
+              const vw = window.innerWidth;
+              const vh = window.innerHeight;
+              const TOP_BAR_H = 40;
+              const TASKBAR_H = 48;
+              const usableH = vh - TOP_BAR_H - TASKBAR_H;
+              const w = Math.floor(vw * 0.85);
+              const h = Math.floor(usableH * 0.85);
+              const x = Math.floor((vw - w) / 2);
+              const y = Math.floor(TOP_BAR_H + (usableH - h) / 2);
+              onUpdateBounds({
+                preEnlarge: { x: win.x, y: win.y, w: win.w, h: win.h },
+                x, y, w, h
+              });
+            }
+          }}
+          aria-label={`Toggle Enlarge ${win.title}`}
         />
 
         {/* Centred title — the pr-8 counterbalances the three dots on the left */}

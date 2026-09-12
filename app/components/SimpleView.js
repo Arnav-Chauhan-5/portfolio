@@ -96,6 +96,75 @@ function ProjLink({ href, icon, label, todo, todolabel, native }) {
   );
 }
 
+/* ── Project Details ───────────────────────────────────────────────────────── */
+function ProjectDetails({ project }) {
+  if (!project.problem && !project.role && (!project.decisions || project.decisions.length === 0)) return null;
+
+  return (
+    <div className="mt-6 border-t border-line pt-4">
+      {/* Problem */}
+      {project.problem && (
+        <div className="pt-2">
+          <div className="mb-3">
+            <span
+              className="text-[9px] text-accent tracking-[0.2em] uppercase border border-accent px-2 py-0.5 rounded-sm"
+              style={MONO}
+            >
+              problem
+            </span>
+          </div>
+          <p className="text-[12px] text-ink-dim leading-relaxed" style={BODY}>
+            {project.problem}
+          </p>
+        </div>
+      )}
+
+      {/* Role */}
+      {project.role && (
+        <div className="pt-2 mt-4">
+          <div className="mb-3">
+            <span
+              className="text-[9px] text-accent tracking-[0.2em] uppercase border border-accent px-2 py-0.5 rounded-sm"
+              style={MONO}
+            >
+              role
+            </span>
+          </div>
+          <p className="text-[12px] text-ink-dim leading-relaxed" style={BODY}>
+            {project.role}
+          </p>
+        </div>
+      )}
+
+      {/* Technical Decisions */}
+      {project.decisions && project.decisions.length > 0 && (
+        <div className="pt-2 mt-4">
+          <div className="mb-4">
+            <span
+              className="text-[9px] text-accent tracking-[0.2em] uppercase border border-accent px-2 py-0.5 rounded-sm"
+              style={MONO}
+            >
+              technical decisions
+            </span>
+          </div>
+          <div className="flex flex-col gap-4">
+            {project.decisions.map((decision, i) => (
+              <div key={i}>
+                <h4 className="text-[12px] font-bold text-ink mb-1" style={BODY}>
+                  {decision.title}
+                </h4>
+                <p className="text-[12px] text-ink-dim leading-relaxed" style={BODY}>
+                  {decision.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Featured project card (large) ──────────────────────────────────────── */
 function FeaturedCard({ project }) {
   return (
@@ -138,11 +207,12 @@ function FeaturedCard({ project }) {
         <ProjLink
           href={project.links.repo}
           icon="ti-brand-github"
-          label="source"
-          todo
+          label="github repo"
           todolabel="repo — TODO"
         />
       </div>
+
+      <ProjectDetails project={project} />
     </div>
   );
 }
@@ -171,11 +241,12 @@ function SecondaryCard({ project }) {
         <ProjLink
           href={project.links.repo}
           icon="ti-brand-github"
-          label="source"
-          todo
+          label="github repo"
           todolabel="repo — TODO"
         />
       </div>
+
+      <ProjectDetails project={project} />
     </div>
   );
 }
@@ -265,16 +336,17 @@ export default function SimpleView({ onEnterDesktop }) {
               view work ↓
             </a>
 
-            {/* Resume — TODO: replace href with hosted PDF */}
-            <span
-              className="px-4 py-2 text-xs border border-line text-ink-faint
-                         opacity-40 cursor-not-allowed select-none"
+            {/* Resume */}
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 text-xs border border-line text-ink hover:text-accent hover:border-accent transition-colors"
               style={MONO}
-              title="Resume coming soon — check back later"
-              aria-disabled="true"
+              title="Download Resume"
             >
               download resume
-            </span>
+            </a>
           </div>
         </section>
 
@@ -324,9 +396,8 @@ export default function SimpleView({ onEnterDesktop }) {
             />
             <ContactRow
               label="resume"
-              href="#"
-              display="[TODO — host the PDF and link it here]"
-              todo
+              href="/resume.pdf"
+              display="resume.pdf"
             />
           </div>
 

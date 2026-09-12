@@ -42,10 +42,11 @@ export default function ResumeApp() {
 
         {/* Download PDF Button */}
         <a
-          href="#"
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-2 px-3 py-1.5 border border-line rounded text-xs text-ink hover:text-accent hover:border-accent transition-colors"
           style={MONO}
-          onClick={(e) => { e.preventDefault(); alert('TODO: Connect resume PDF link'); }}
           title="Download PDF"
         >
           <i className="ti ti-download" aria-hidden="true" />

@@ -148,7 +148,7 @@ function Detail({ project }) {
         <LinkRow
           href={project.links.repo}
           icon="ti-brand-github"
-          label="source"
+          label="github repo"
           disabled={!project.links.repo}
           disabledLabel="repo — TODO"
         />

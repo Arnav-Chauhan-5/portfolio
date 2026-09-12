@@ -40,7 +40,7 @@ export const PROJECTS = [
     ],
     links: {
       demo: 'https://chess-brown-beta.vercel.app',
-      repo: null, // TODO: add GitHub repo URL
+      repo: 'https://github.com/Arnav-Chauhan-5/Chess',
     },
     type: 'web',      // 'web' | 'native'
     featured: true,
@@ -48,32 +48,52 @@ export const PROJECTS = [
   {
     id: 'cpp-shell',
     name: 'C++20 Interactive Developer Shell',
-    tagline: 'Responsive TUI Terminal Emulator',
+    tagline: 'Responsive TUI Terminal Emulator built with FTXUI + C++20',
     description:
       'A responsive Text-Based User Interface (TUI) terminal emulator built from scratch ' +
       'in C++20, using FTXUI for the interface layer and CMake to manage build ' +
       'configuration across environments. Features include tab auto-completion, command ' +
       'history, and cross-platform file navigation using the C++20 <filesystem> library.',
     tech: ['C++20', 'FTXUI', 'CMake', '<filesystem>'],
-    problem: "Command-line tools are often either bare-bones — no autocomplete, no history — or tied to a single platform's filesystem APIs.",
-    role: "Built solo from scratch — designed the TUI rendering layer, the CMake build configuration across environments, and the file-navigation logic.",
+    problem: "Most hand-built shell projects either don't handle real quoting/escaping correctly, or freeze the UI while an external command runs. The goal was a shell that feels like an actual terminal — responsive while streaming long-running output, with history and tab-completion, built without vendoring a UI library into the repo.",
+    role: "Solo — designed the command architecture, wrote the tokenizer, and built the multithreaded FTXUI rendering loop. Built in phases (visible in commit history): command registry → system command execution → cd/filesystem support → history navigation → tab completion → threaded streaming UI → lock-free buffer handoff.",
     decisions: [
       {
-        title: "FTXUI for the interface layer",
-        detail: "Handles rendering a responsive terminal UI without hand-rolling ANSI escape sequences directly."
+        title: "Command pattern",
+        detail: "An abstract Command base class plus a CommandRegistry storing unique_ptr<Command> in a hash map — O(1) dispatch; new builtins just subclass Command and register, no dispatch-logic changes."
       },
       {
-        title: "C++20 <filesystem> for cross-platform navigation",
-        detail: "Lets file browsing work the same way across operating systems using the standard library instead of writing separate, platform-specific filesystem code."
+        title: "Hand-written tokenizer",
+        detail: "State machine (no regex) supporting double/single quotes, backslash escapes, and quote-adjacent token concatenation (abc\"def\" -> abcdef)."
       },
       {
-        title: "CMake for build configuration",
-        detail: "Manages the build across different environments without a hand-written, environment-specific Makefile per platform."
+        title: "Non-blocking external commands",
+        detail: "Anything not a builtin is piped through _popen on a background std::thread so the UI never blocks, streaming output back to the main thread via FTXUI's screen.Post()."
+      },
+      {
+        title: "Lock-free handoff",
+        detail: "The worker thread accumulates output in a local buffer and std::move's it into the Post() closure instead of using a mutex — only the main thread ever touches shared UI state."
+      },
+      {
+        title: "Batched flushing",
+        detail: "Output flushes every 100 lines or 100ms, whichever comes first, so high-output commands don't hammer the renderer."
+      },
+      {
+        title: "Bounded scrollback",
+        detail: "Capped at 500 lines with oldest-line eviction, keeping memory and render time bounded during long sessions."
+      },
+      {
+        title: "Custom terminal UX",
+        detail: "Hand-rendered block cursor, arrow-key command history, Tab completion across both command names and the filesystem (std::filesystem), mouse-wheel scroll with auto-snap-to-bottom, and Ctrl+C to cleanly stop a running subprocess."
+      },
+      {
+        title: "CMake + FetchContent pulls FTXUI v5.0.0 at configure time",
+        detail: "No vendored dependency, one cmake --build reproduces the whole thing. Currently targets Windows (mingw/_popen)."
       }
     ],
     links: {
       demo: null,  // Native terminal application — no browser demo
-      repo: null,  // TODO: add GitHub repo URL
+      repo: 'https://github.com/Arnav-Chauhan-5/Developer-shell',
     },
     type: 'native',
     featured: false,

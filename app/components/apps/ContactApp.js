@@ -65,9 +65,8 @@ export default function ContactApp() {
         />
         <Row
           label="resume"
-          href="#"
-          display="[TODO — host the PDF and link it here]"
-          todo
+          href="/resume.pdf"
+          display="resume.pdf"
         />
       </div>
 

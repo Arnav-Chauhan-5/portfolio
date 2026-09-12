@@ -19,8 +19,10 @@ import AboutBuildApp from './apps/AboutBuildApp';
 import ChessApp from './apps/ChessApp';
 import DsaApp from './apps/DsaApp';
 import NeofetchWidget from './NeofetchWidget';
+import GitHubWidget from './GitHubWidget';
+import ProcessWidget from './ProcessWidget';
 
-import { IconFolder, IconUser, IconCode, IconMail, IconTool, IconLayoutList, IconTerminal2, IconFileText, IconTrash, IconCrown, IconBinaryTree } from '@tabler/icons-react';
+import { IconFolder, IconUser, IconCode, IconMail, IconTool, IconLayoutList, IconTerminal2, IconFileText, IconTrash, IconCrown, IconBinaryTree, IconBrandGithub, IconBrandLinkedin } from '@tabler/icons-react';
 
 /* ── Icon definitions ────────────────────────────────────────────────────── */
 const ICONS = [
@@ -28,8 +30,10 @@ const ICONS = [
   { appId: 'about', Icon: IconUser, label: 'about' },
   { appId: 'skills', Icon: IconCode, label: 'skills' },
   { appId: 'contact', Icon: IconMail, label: 'contact' },
+  { appId: 'github', Icon: IconBrandGithub, label: 'github', url: 'https://github.com/Arnav-Chauhan-5' },
+  { appId: 'linkedin', Icon: IconBrandLinkedin, label: 'linkedin', url: 'https://linkedin.com/in/arnav-chauhan-b4033028b' },
   { appId: 'terminal', Icon: IconTerminal2, label: 'terminal' },
-  { appId: 'resume', Icon: IconFileText, label: 'resume.pdf' },
+  { appId: 'resume', Icon: IconFileText, label: 'resume.pdf', url: '/resume.pdf' },
   { appId: 'chess', Icon: IconCrown, label: 'chess' },
   { appId: 'dsa', Icon: IconBinaryTree, label: 'dsa' },
 ];
@@ -39,22 +43,9 @@ const ICONS = [
  * Mouse: double-click to open
  * Touch: single tap to open (e.preventDefault stops the synthetic click)
  */
-function DesktopIcon({ Icon, label, onOpen }) {
-  return (
-    <button
-      onDoubleClick={onOpen}
-      onTouchEnd={(e) => { e.preventDefault(); onOpen(); }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onOpen();
-        }
-      }}
-      className="flex flex-col items-center gap-2 p-3 w-[76px] rounded
-                 hover:bg-white/5 group select-none cursor-default
-                 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
-      aria-label={`Open ${label}`}
-    >
+function DesktopIcon({ Icon, label, onOpen, url }) {
+  const content = (
+    <>
       <Icon
         className="w-8 h-8 text-ink-dim group-hover:text-ink transition-colors"
         stroke={1.5}
@@ -67,6 +58,39 @@ function DesktopIcon({ Icon, label, onOpen }) {
       >
         {label}
       </span>
+    </>
+  );
+
+  const baseClasses = "flex flex-col items-center gap-2 p-3 w-[76px] rounded hover:bg-white/5 group select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-accent";
+
+  if (url) {
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${baseClasses} cursor-pointer`}
+        aria-label={`Visit ${label}`}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      onDoubleClick={onOpen}
+      onTouchEnd={(e) => { e.preventDefault(); onOpen(); }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
+      className={`${baseClasses} cursor-default`}
+      aria-label={`Open ${label}`}
+    >
+      {content}
     </button>
   );
 }
@@ -293,28 +317,47 @@ export default function Desktop({ onSimpleView }) {
 
         {/* ── Layer 0.5: Decorative Widgets ───────────────────────────────── */}
         <NeofetchWidget />
+        <GitHubWidget />
+        <ProcessWidget />
 
-        {/* ── Layer 1: Desktop icons — top-left column ────────────────────── */}
+        {/* ── Layer 1: Desktop icons ────────────────────── */}
         <div
-          className="absolute top-14 left-4 flex flex-col gap-1"
+          className="absolute top-14 left-4 flex gap-2"
           style={{ zIndex: 10 }}
         >
-          {ICONS.map(({ appId, Icon, label }) => (
-            <DesktopIcon
-              key={appId}
-              Icon={Icon}
-              label={label}
-              onOpen={() => handleOpenApp(appId)}
-            />
-          ))}
+          {/* Column 1 */}
+          <div className="flex flex-col gap-1">
+            {ICONS.slice(0, 8).map(({ appId, Icon, label, url }) => (
+              <DesktopIcon
+                key={appId}
+                Icon={Icon}
+                label={label}
+                onOpen={() => handleOpenApp(appId)}
+                url={url}
+              />
+            ))}
 
-          {/* ── Desktop icons — isolated trash ─────────────────────── */}
-          <div className="mt-6">
-            <DesktopIcon
-              Icon={IconTrash}
-              label="trash"
-              onOpen={() => handleOpenApp('trash')}
-            />
+            {/* ── Desktop icons — isolated trash ─────────────────────── */}
+            <div className="mt-6">
+              <DesktopIcon
+                Icon={IconTrash}
+                label="trash"
+                onOpen={() => handleOpenApp('trash')}
+              />
+            </div>
+          </div>
+
+          {/* Column 2 */}
+          <div className="flex flex-col gap-1">
+            {ICONS.slice(8).map(({ appId, Icon, label, url }) => (
+              <DesktopIcon
+                key={appId}
+                Icon={Icon}
+                label={label}
+                onOpen={() => handleOpenApp(appId)}
+                url={url}
+              />
+            ))}
           </div>
         </div>
 

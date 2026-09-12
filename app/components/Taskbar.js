@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, startTransition } from 'react';
-import { IconWifi, IconBattery4, IconVolume2 } from '@tabler/icons-react';
+import { IconWifi, IconBattery4, IconVolume, IconVolume2, IconVolume3 } from '@tabler/icons-react';
 import { useSystemStats } from '../hooks/useSystemStats';
 
 /* ── Live clock ──────────────────────────────────────────────────────────── */
@@ -88,6 +88,63 @@ function SystemLoad() {
 /* ── Divider ─────────────────────────────────────────────────────────────── */
 function Divider() {
   return <div className="w-px h-5 bg-line mx-1 shrink-0" aria-hidden="true" />;
+}
+
+/* ── System Tray ─────────────────────────────────────────────────────────── */
+function SystemTray() {
+  const [popover, setPopover] = useState(null);
+  const [volumeLevel, setVolumeLevel] = useState(2); // 0=muted, 1=50%, 2=100%
+
+  const showPopover = (name) => {
+    setPopover(name);
+    setTimeout(() => {
+      setPopover(curr => curr === name ? null : curr);
+    }, 3000);
+  };
+
+  const handleWifi = () => showPopover('wifi');
+  const handleBattery = () => showPopover('battery');
+  const handleVolume = () => {
+    setVolumeLevel(v => (v + 1) % 3);
+    showPopover('volume');
+  };
+
+  const PopoverContent = ({ text }) => (
+    <div 
+      className="absolute bottom-full right-[-8px] mb-2 whitespace-nowrap bg-panel border border-line px-2 py-1.5 rounded-sm text-[10px] text-ink tracking-wide shadow-lg animate-[toast-slide-in_0.2s_ease-out]"
+      style={{ fontFamily: 'var(--font-jetbrains), ui-monospace, monospace' }}
+    >
+      {text}
+      {/* Down arrow triangle */}
+      <div className="absolute -bottom-[5px] right-[10px] w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-line" />
+      <div className="absolute -bottom-[4px] right-[10px] w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-panel" />
+    </div>
+  );
+
+  return (
+    <div className="flex items-center gap-3 text-ink-dim opacity-70 relative">
+      <div className="relative flex items-center justify-center">
+        <button onClick={handleWifi} className="hover:text-ink hover:opacity-100 transition-colors focus:outline-none" aria-label="Wifi Status">
+          <IconWifi size={14} />
+        </button>
+        {popover === 'wifi' && <PopoverContent text="connected: github.com/Arnav-Chauhan-5" />}
+      </div>
+
+      <div className="relative flex items-center justify-center">
+        <button onClick={handleBattery} className="hover:text-ink hover:opacity-100 transition-colors focus:outline-none" aria-label="Battery Status">
+          <IconBattery4 size={14} className="text-accent" />
+        </button>
+        {popover === 'battery' && <PopoverContent text="battery: 1337% (overclocked)" />}
+      </div>
+
+      <div className="relative flex items-center justify-center">
+        <button onClick={handleVolume} className="hover:text-ink hover:opacity-100 transition-colors focus:outline-none" aria-label="Volume Control">
+          {volumeLevel === 0 ? <IconVolume size={14} /> : volumeLevel === 1 ? <IconVolume2 size={14} /> : <IconVolume3 size={14} />}
+        </button>
+        {popover === 'volume' && <PopoverContent text={volumeLevel === 0 ? 'audio: muted' : `volume: ${volumeLevel * 50}%`} />}
+      </div>
+    </div>
+  );
 }
 
 /* ── Taskbar ─────────────────────────────────────────────────────────────── */
@@ -184,11 +241,7 @@ export default function Taskbar({
       {/* ── Right cluster: system tray + clock ──────────────────────────────── */}
       <div className="flex items-center gap-4 pl-2 shrink-0 pr-2">
         {/* System Tray */}
-        <div className="flex items-center gap-3 text-ink-dim opacity-70">
-          <IconWifi size={14} title="connection: stable" />
-          <IconBattery4 size={14} title="battery: 100%" className="text-green-500" />
-          <IconVolume2 size={14} title="volume: 75%" />
-        </div>
+        <SystemTray />
         <Clock />
       </div>
     </div>

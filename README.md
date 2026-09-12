@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Portfolio
 
-## Getting Started
+> Full-stack developer & systems engineer. Building things that work at 3 am.
 
-First, run the development server:
+*(Note: Real screenshots need to be added here.)*
+![Quick View - Placeholder](https://via.placeholder.com/800x400?text=Quick+View+Screenshot)
+![Desktop Mode - Placeholder](https://via.placeholder.com/800x400?text=Desktop+Mode+Screenshot)
+
+## 🌐 Live Demo
+[https://portfolio-iota-six-fgvpeok9jf.vercel.app/](https://portfolio-iota-six-fgvpeok9jf.vercel.app/)
+
+## ✨ Features
+
+- **Dual-View Design**: Toggle between a plain scrollable "quick view" and a fully interactive fake-desktop OS mode.
+- **Desktop Mode**: Experience a full OS environment featuring draggable windows, a functional taskbar, app icons, and window snapping.
+- **Projects Window**: In-depth write-ups per project covering the Problem, Role, and Technical Decisions.
+- **Live Stats Integrations**:
+  - Live GitHub contribution graph.
+  - Data Structures & Algorithms (DSA) stats with linked competitive-programming profiles.
+- **Immersive Experience**: Boot-up intro sequence and an idle screensaver.
+
+## 🛠 Tech Stack
+
+- **Next.js (App Router)**
+- **JavaScript**
+- **Tailwind CSS v4**
+- **Framer Motion**
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally:
 
 ```bash
+git clone <repo-url>
+cd portfolio
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+*Note: There are no required environment variables for local development.*
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🏆 Featured Projects
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The portfolio features the following major projects, which reside in their own standalone repositories:
 
-## Learn More
+- **[Chess](https://github.com/Arnav-Chauhan-5/Chess)**
+- **[C++20 Interactive Developer Shell](https://github.com/Arnav-Chauhan-5/Developer-shell)**
 
-To learn more about Next.js, take a look at the following resources:
+## 📬 Contact
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Email**: [arnavchauhan852@gmail.com](mailto:arnavchauhan852@gmail.com)
+- **GitHub**: [@Arnav-Chauhan-5](https://github.com/Arnav-Chauhan-5)
+- **LinkedIn**: [Arnav Chauhan](https://www.linkedin.com/in/arnav-chauhan-b4033028b)

@@ -21,8 +21,6 @@ function Tag({ label }) {
 
 /* ── Fake Terminal Frame ─────────────────────────────────────────────────── */
 function FakeTerminalFrame() {
-  const [error, setError] = useState(false);
-
   return (
     <div className="flex flex-col border border-line rounded-lg overflow-hidden bg-void my-4 w-full shrink-0 shadow-md">
       {/* Title bar */}
@@ -45,22 +43,11 @@ function FakeTerminalFrame() {
 
       {/* Content */}
       <div className="w-full aspect-video bg-void relative flex items-center justify-center">
-        {!error ? (
-          // TODO: Supply the actual recording file at public/media/shell-demo.mp4.
-          <video
-            src="/media/shell-demo.mp4"
-            muted
-            loop
-            autoPlay
-            playsInline
-            className="w-full h-full object-cover"
-            onError={() => setError(true)}
-          />
-        ) : (
-          <span className="text-[10px] text-ink-faint tracking-widest uppercase" style={MONO}>
-            recording coming soon
-          </span>
-        )}
+        <img
+          src="/media/devshell-preview.png"
+          alt="C++20 Developer Shell preview"
+          className="w-full h-full object-contain"
+        />
       </div>
     </div>
   );

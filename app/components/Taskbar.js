@@ -169,6 +169,7 @@ export default function Taskbar({
       className="fixed bottom-0 inset-x-0 h-11 flex items-center px-2 gap-1
                  bg-panel border-t border-line select-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]"
       style={{ zIndex: 9999 }}
+      onContextMenu={(e) => e.stopPropagation()}
     >
       {/* ── Workspace Switcher ──────────────────────────────────────────── */}
       <WorkspaceSwitcher />

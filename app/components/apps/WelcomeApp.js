@@ -34,6 +34,10 @@ export default function WelcomeApp() {
       <p className="text-[12px] text-ink-dim leading-relaxed max-w-xs mt-3" style={BODY}>
         Tip: drag a window to the screen edge to snap it.
       </p>
+
+      <p className="text-[12px] text-ink-dim leading-relaxed max-w-xs mt-3" style={BODY}>
+        Tip: right-click the desktop for more options.
+      </p>
     </div>
   );
 }

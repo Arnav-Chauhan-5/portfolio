@@ -159,6 +159,7 @@ export default function Window({ win, onClose, onMinimize, onFocus, onMove, onUp
           zIndex: win.z,
         }}
         onMouseDown={onFocus}          /* focus when clicking anywhere in the window */
+        onContextMenu={(e) => e.stopPropagation()}
       >
       {/* ── Title bar ──────────────────────────────────────────────────── */}
       <div
@@ -167,6 +168,7 @@ export default function Window({ win, onClose, onMinimize, onFocus, onMove, onUp
         onMouseDown={handleTitleDown}
         onTouchStart={handleTitleDown}
         onDoubleClick={(e) => { e.stopPropagation(); onMinimize(); }}
+        onContextMenu={(e) => e.stopPropagation()}
       >
         {/* Traffic lights */}
         <button

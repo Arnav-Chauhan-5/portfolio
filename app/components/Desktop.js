@@ -270,10 +270,8 @@ export default function Desktop({ onSimpleView }) {
     <div
       className="fixed inset-0 bg-void overflow-hidden"
       onContextMenu={(e) => {
-        if (e.target === e.currentTarget) {
-          e.preventDefault();
-          setContextMenu({ isOpen: true, x: e.clientX, y: e.clientY });
-        }
+        e.preventDefault();
+        setContextMenu({ isOpen: true, x: e.clientX, y: e.clientY });
       }}
     >
       {/* ── Layer -1: Dot Grid Texture ──────────────────────────────────── */}

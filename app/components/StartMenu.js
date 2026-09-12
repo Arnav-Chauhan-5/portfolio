@@ -99,6 +99,7 @@ export default function StartMenu({ isOpen, onClose, onOpenApp, onSimpleView }) 
           fontFamily: 'var(--font-jetbrains), ui-monospace, monospace',
           boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.4)'
         }}
+        onContextMenu={(e) => e.stopPropagation()}
       >
         {/* App list */}
         {APP_ITEMS.map((item, i) => (

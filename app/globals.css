@@ -3,22 +3,22 @@
 /* ─── Design-system tokens ─────────────────────────────────────────────────── */
 :root {
   /* Surfaces */
-  --void:         #08090b;
-  --panel:        #111318;
-  --panel-raised: #16181d;
+  --void:         #000000;
+  --panel:        #0a0a0c;
+  --panel-raised: #121214;
 
   /* Borders */
-  --line:         #22252b;
-  --line-strong:  #2c2f36;
+  --line:         #1e1e21;
+  --line-strong:  #2b2b2f;
 
   /* Typography */
   --ink:          #eef0f2;
   --ink-dim:      #9a9da3;
-  --ink-faint:    #808388;  /* lifted from #6f7278 → contrast ~5.1:1 on void, ~4.8:1 on panel (WCAG AA) */
+  --ink-faint:    #808388;
 
   /* Accent */
-  --accent:       #5dcaa5;
-  --accent-dim:   #1a2e28;
+  --accent:       #22c55e;
+  --accent-dim:   #052e16;
 
   /* Glitch palette (reserved — used only in glitch-text effect) */
   --glitch-a:     #ff4d6d;

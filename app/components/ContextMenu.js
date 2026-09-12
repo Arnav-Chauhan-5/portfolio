@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { IconRefresh, IconTerminal2, IconPalette, IconInfoCircle } from '@tabler/icons-react';
 
-const ACCENTS = ['#5dcaa5', '#a78bfa', '#fbbf24']; // Teal, Violet, Amber
-const ACCENT_NAMES = ['teal', 'violet', 'amber'];
+const ACCENTS = ['#22c55e', '#a78bfa', '#fbbf24']; // Green, Violet, Amber
+const ACCENT_NAMES = ['green', 'violet', 'amber'];
 
 export default function ContextMenu({ isOpen, x, y, onClose, onOpenApp, addToast }) {
   const [selectedIndex, setSelectedIndex] = useState(-1);

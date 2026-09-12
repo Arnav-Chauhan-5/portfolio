@@ -21,21 +21,27 @@ export default function DsaApp() {
 
       <div className="flex flex-col">
         {DSA_DATA.map((item) => (
-          <div key={item.id} className="flex items-center justify-between py-3 border-b border-line last:border-0">
+          <div key={item.id} className="flex flex-col py-3.5 border-b border-line last:border-0 gap-2">
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
-              <span className="text-[12px] font-medium text-ink" style={BODY}>{item.platform}</span>
+              <span className="text-[12px] font-medium text-ink shrink-0" style={BODY}>
+                {item.platform}
+              </span>
               <span className="text-[12px] text-ink-dim hidden sm:inline" style={BODY}>—</span>
-              <span className="text-[12px] text-ink-dim" style={BODY}>{item.desc}</span>
+              <span className="text-[12px] text-ink-dim leading-relaxed" style={BODY}>
+                {item.desc}
+              </span>
             </div>
             {item.hasLink && (
-              <a 
-                href={item.url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="shrink-0 ml-4 hover:opacity-70 transition-opacity" 
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] text-accent hover:underline w-fit ml-2"
+                style={MONO}
                 title={item.title}
               >
-                <i className="ti ti-external-link text-[14px] text-accent" aria-hidden="true" />
+                <i className="ti ti-external-link text-xs" aria-hidden="true" />
+                view profile
               </a>
             )}
           </div>

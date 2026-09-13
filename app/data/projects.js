@@ -59,36 +59,20 @@ export const PROJECTS = [
     role: "Solo — designed the command architecture, wrote the tokenizer, and built the multithreaded FTXUI rendering loop. Built in phases (visible in commit history): command registry → system command execution → cd/filesystem support → history navigation → tab completion → threaded streaming UI → lock-free buffer handoff.",
     decisions: [
       {
-        title: "Command pattern",
-        detail: "An abstract Command base class plus a CommandRegistry storing unique_ptr<Command> in a hash map — O(1) dispatch; new builtins just subclass Command and register, no dispatch-logic changes."
+        title: "Command pattern architecture",
+        detail: "An abstract base class and registry hash map enables O(1) command dispatch, allowing new built-ins to be added without modifying core routing logic."
       },
       {
-        title: "Hand-written tokenizer",
-        detail: "State machine (no regex) supporting double/single quotes, backslash escapes, and quote-adjacent token concatenation (abc\"def\" -> abcdef)."
+        title: "Custom state-machine tokenizer",
+        detail: "Hand-written tokenizer handles complex parsing without regex, supporting quoted strings, backslash escaping, and adjacent token concatenation."
       },
       {
-        title: "Non-blocking external commands",
-        detail: "Anything not a builtin is piped through _popen on a background std::thread so the UI never blocks, streaming output back to the main thread via FTXUI's screen.Post()."
+        title: "Non-blocking concurrent execution",
+        detail: "External commands run on background threads using _popen. Output is batched and passed to the main UI loop via lock-free std::move handoffs, ensuring the terminal never freezes."
       },
       {
-        title: "Lock-free handoff",
-        detail: "The worker thread accumulates output in a local buffer and std::move's it into the Post() closure instead of using a mutex — only the main thread ever touches shared UI state."
-      },
-      {
-        title: "Batched flushing",
-        detail: "Output flushes every 100 lines or 100ms, whichever comes first, so high-output commands don't hammer the renderer."
-      },
-      {
-        title: "Bounded scrollback",
-        detail: "Capped at 500 lines with oldest-line eviction, keeping memory and render time bounded during long sessions."
-      },
-      {
-        title: "Custom terminal UX",
-        detail: "Hand-rendered block cursor, arrow-key command history, Tab completion across both command names and the filesystem (std::filesystem), mouse-wheel scroll with auto-snap-to-bottom, and Ctrl+C to cleanly stop a running subprocess."
-      },
-      {
-        title: "CMake + FetchContent pulls FTXUI v5.0.0 at configure time",
-        detail: "No vendored dependency, one cmake --build reproduces the whole thing. Currently targets Windows (mingw/_popen)."
+        title: "Terminal UX & resource management",
+        detail: "Features tab auto-completion, history navigation, and bounded scrollback (capped at 500 lines) to control memory. Built with CMake and FetchContent to avoid vendoring dependencies."
       }
     ],
     links: {

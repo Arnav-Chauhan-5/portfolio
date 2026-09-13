@@ -13,9 +13,8 @@
 
 This project is a comprehensive, interactive developer portfolio featuring a unique dual-view design. It allows visitors to seamlessly toggle between a clean, scrollable "quick view" for fast reading, and a fully interactive, terminal-inspired desktop OS environment. The desktop mode features draggable windows, a functional taskbar, and live API integrations (like GitHub contributions and DSA statistics), providing an immersive experience that reflects a passion for system engineering and detail-oriented frontend design.
 
-*(Note: Real screenshots need to be added here.)*
-![Quick View - Placeholder](https://via.placeholder.com/800x400?text=Quick+View+Screenshot)
-![Desktop Mode - Placeholder](https://via.placeholder.com/800x400?text=Desktop+Mode+Screenshot)
+![Quick View](./public/media/quick-view.png)
+![Desktop Mode](./public/media/desktop-mode.png)
 
 ## 🌐 Live Demo
 [https://portfolio-iota-six-fgvpeok9jf.vercel.app/](https://portfolio-iota-six-fgvpeok9jf.vercel.app/)

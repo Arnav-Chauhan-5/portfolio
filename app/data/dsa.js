@@ -18,17 +18,13 @@ export const DSA_DATA = [
   {
     id: 'hackerrank',
     platform: 'HackerRank',
-    desc: 'actively solving algorithmic challenges',
-    url: 'https://www.hackerrank.com/profile/arnavchauhan852',
-    title: 'View HackerRank Profile',
-    hasLink: true,
+    desc: 'actively solving algorithmic challenges and participating in problem sets across data structures and problem solving tracks.',
+    hasLink: false,
   },
   {
     id: 'codeforces',
     platform: 'Codeforces',
-    desc: 'regular competitive programming participant',
-    url: 'https://codeforces.com/profile/Arnav_Empire',
-    title: 'View Codeforces Profile',
-    hasLink: true,
+    desc: 'regular competitive programming participant, working through rated contest problems to build speed under time pressure.',
+    hasLink: false,
   }
 ];

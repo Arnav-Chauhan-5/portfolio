@@ -210,7 +210,7 @@ export default function Desktop({ onSimpleView }) {
           messageTimeout = setTimeout(() => {
             setShowIdleMessage(false);
           }, 5000);
-        }, 15000);
+        }, 30000);
       }
     };
 
